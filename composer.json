@@ -1,0 +1,30 @@
+{
+    "name": "Towerhouse/Healthmeasures",
+    "description": "This class gives you the ability to generate health measures given a name and a unit, for instance: weight / pound or kilo. You can configure where to store them and them gather to collect their values by date given a username or other token. The library gives you the ability to generate graphs or other stats information. It's totally configurable, methods are well documented and comes with unit testing.",
+    "type": "library",
+    "keywords": ["health", "data"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucia Figueroa",
+            "email": "lucia.figueroa@towerhousestudio.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^5.3.3|^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Healthmeasures\\": "src/Healthmeasures"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Healthmeasures\\Test\\": "test/Healthmeasures/"
+        }
+    }
+}
