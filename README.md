@@ -11,6 +11,7 @@
 Health Measures uses a number of open source projects to work properly:
 
 * [PHP] - <= 5.3
+* [illuminate/config] - 5 . This is the config handler that environments like laravel 4.2 used to have.
 
 ### Installation
 
@@ -18,3 +19,5 @@ Health Measures uses a number of open source projects to work properly:
 - Include the autoloader. 
 - If you want to run test-creation.php quickly put the whole project into your local server and run 
 test/quick.php it will show you what you want to see.
+- Declare the storage you want to use on config/database.php
+- If you're using this package inside a laravel or lumen project you don´t need the .env but you do need the previous step.

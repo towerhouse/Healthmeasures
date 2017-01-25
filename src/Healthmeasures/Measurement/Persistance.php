@@ -18,6 +18,9 @@ abstract class Persistance
         $this->engine = static::$app->config->get('database.db_engine');
     }
     
+    /**
+     * Saves any persistable record using reflection.
+     */
     public function save()
     {
         //Metadata
@@ -42,11 +45,15 @@ abstract class Persistance
         $placeholders = '(' . implode(',', array_fill(0, count($props), '?')) . ')';
         $query = "REPLACE INTO $table_name $prop_names VALUES $placeholders";
         $statement = static::$connection->prepare($query);
-        print_r(static::$connection->errorInfo());
         $statement->execute($values);
-        print_r(static::$connection->errorInfo());
     }
     
+    /**
+     * Gets the table name for this class using the configuration file and
+     * the name of the class.
+     * @param string $classname
+     * @return string
+     */
     public function getTableName($classname)
     {
         $table_names = static::$app->config->get('database.table_names'); 
@@ -62,8 +69,14 @@ abstract class Persistance
         return $table;
     }
     
+    /**
+     * Declares the attributes of the objects that should be saved using an array.
+     */
     public abstract function getSaveProperties();
     
+    /**
+     * Sets an string id to identify the record.
+     */
     protected abstract function setId();
         
     /**
@@ -99,11 +112,14 @@ abstract class Persistance
         $this->setConnection();
         
         static::$connection->exec($measures_create);
-        static::$connection->exec($values_create);print_r(static::$connection->errorInfo());
+        static::$connection->exec($values_create);
 
     }
 
-    
+    /**
+     * Instantiates a connection according to the driver declared on the
+     * configuration file.
+     */
     private function setConnection()
     {
         if (!static::$connection) {
