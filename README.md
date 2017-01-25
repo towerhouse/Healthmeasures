@@ -17,4 +17,4 @@ Health Measures uses a number of open source projects to work properly:
 - Nothing fancy, just run your composer to include this package.
 - Include the autoloader. 
 - If you want to run test-creation.php quickly put the whole project into your local server and run 
-http://localhost/health-measures/src/test/test-creation.php it will show you what you want to see.
+test/quick.php it will show you what you want to see.
