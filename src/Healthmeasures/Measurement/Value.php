@@ -26,7 +26,29 @@ class Value extends Persistance
         $this->measure_id = $measure->getId();
         $this->created_at = !$date ? date("Y-m-d H:i:s") : $date;
     }
-
+    
+    /** Static getters to retrieve collections or one object **/
+    
+    public function getValueById($id)
+    {
+        return $this->getObjectsByCriteria(array('id' => $id));
+    }
+    
+    /**
+     * Returns a list of values ordered by date desc
+     * @param datetime $start
+     * @param datetime $end
+     * @return Array[Value]
+     */
+    public function getValuesByDate($owner_id, $measure_id, $start, $end = "now")
+    {
+        $end = ($end == "now") ? date("Y-m-d H:i:s") : $end;
+        return $this->getObjectsByCriteria(
+                array('owner_id' => $owner_id, 'measure_id' => $measure_id), 
+                array('created_at' => "BETWEEN $start AND $end")
+        );
+    }
+      
     public function getSaveProperties()
     {
         return array('id', 'owner_id', 'measure_id', 'created_at');

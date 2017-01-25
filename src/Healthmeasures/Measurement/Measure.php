@@ -46,16 +46,16 @@ class Measure extends Persistance
         static::$default_language = $lang;
     }
     
-    /** Static getters to retrieve collections **/
-    
+    /** Static getters to retrieve collections or one object **/
+        
     /**
      * Returns the measures with that name. 
      * @param string $name
      * @return Array[Measure]
      */
-    public static function getMeasuresByName($name)
+    public function getMeasuresByName($name)
     {
-        
+        return $this->getObjectsByCriteria(array('name' => $name));
     }
 
     /**
@@ -63,9 +63,9 @@ class Measure extends Persistance
      * @param string $unit
      * @return Array[Measure]
      */
-    public static function getMeasuresByUnit($unit)
+    public function getMeasuresByUnit($unit)
     {
-        
+        return $this->getObjectsByCriteria(array('unit' => $unit));
     }  
     
     /**
@@ -73,9 +73,9 @@ class Measure extends Persistance
      * @param string $lang
      * @return Array[Measure]
      */
-    public static function getMeasuresByLang($lang)
+    public function getMeasuresByLang($lang)
     {
-        
+        return $this->getObjectsByCriteria(array('lang' => $lang));
     }
             
     public function getSaveProperties()

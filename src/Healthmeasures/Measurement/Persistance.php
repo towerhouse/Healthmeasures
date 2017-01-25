@@ -8,7 +8,9 @@ abstract class Persistance
     protected static $connection = null;
     protected static $app = null;
     protected $engine;
-    
+    protected $fetch_style;
+
+
     public function __construct()
     {
         if (!static::$app) {
@@ -16,6 +18,7 @@ abstract class Persistance
         }
         
         $this->engine = static::$app->config->get('database.db_engine');
+        $this->fetch_style = static::$app->config->get('database.fetch');
     }
     
     /**
@@ -43,9 +46,47 @@ abstract class Persistance
         //Terms to form the pdo query
         $prop_names = '(`' . implode('`,`', $props) . ')';
         $placeholders = '(' . implode(',', array_fill(0, count($props), '?')) . ')';
-        $query = "REPLACE INTO $table_name $prop_names VALUES $placeholders";
-        $statement = static::$connection->prepare($query);
+        $sql = "REPLACE INTO $table_name $prop_names VALUES $placeholders";
+        $statement = static::$connection->prepare($sql);
         $statement->execute($values);
+    }
+    
+    public function getObjectsByCriteria(Array $conditions, Array $raw_conditions = array())
+    {
+        //Metadata
+        $this->checkTables();
+        $table_name = $this->getTableName(get_class($this));
+        $conditions_array = array();
+        $values = array();
+        foreach ($conditions as $name => $val) {
+            $conditions_array[] = "`$name` = ?";
+            $values[] = $val;
+        }
+        $sql = "SELECT * FROM $table_name"; 
+        if (count($conditions)) {
+            $sql .= " WHERE " . implode('AND', $conditions_array);
+        }
+        
+        if (count($raw_conditions)) {
+            $connector = count($conditions) ? 'AND' : 'WHERE';
+            $sql .= $connector . implode('AND', $raw_conditions);
+        }
+        
+        $statement = static::$connection->prepare($sql);
+        $statement->execute($values);
+        return $statement->fetchAll($this->fetch_style);
+    }
+    
+    public function getById($id)
+    {
+        $all = $this->getObjectsByCriteria(array('id' => $id));
+        return count($all) >= 1 ? $all[0] : null;
+    }
+    
+    public function getAll()
+    {
+        $all = $this->getObjectsByCriteria(array());
+        return $all;
     }
     
     /**
@@ -95,7 +136,6 @@ abstract class Persistance
             unit VARCHAR(100),
             lang VARCHAR(4),
             created_at DATETIME NOT NULL,
-            updated_at DATETIME NULL,
             PRIMARY KEY(id)
         )";
         
@@ -105,7 +145,6 @@ abstract class Persistance
             measure_id int NOT NULL,
             `value` VARCHAR(100),
             created_at DATETIME NOT NULL,
-            updated_at DATETIME NULL,
             PRIMARY KEY(id)
         )";
         

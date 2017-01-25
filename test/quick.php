@@ -7,6 +7,15 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Healthmeasures\Measurement\Measure;
 
-$mm = new Measure("cintura", "cms", "es");
+$mm = new Measure("cintura", "cm", "es");
 $mm->save();
+$mm2 = new Measure("peso", "kilo", "es");
+$mm2->save();
+$mm3 = new Measure("systole", "", "en");
+$mm3->save();
+
+
+var_export($mm->getMeasuresByLang('es'));
+
+var_export($mm->getAll());
 
