@@ -2,8 +2,10 @@
 
 namespace Healthmeasures\Measurement;
 
-class Measure
+class Measure extends Persistance
 {
+    protected $id;
+    
     protected $name;
 	
     protected $unit;
@@ -15,14 +17,11 @@ class Measure
     
     public function __construct($name, $unit, $lang = null)
     {
+        parent::__construct();
         $this->name = $name;
         $this->unit = $unit;
 	$this->lang = !$lang ? static::$default_language : $lang;
-    }
-    
-    public function save()
-    {
-        
+        $this->setId();
     }
     
     /**
@@ -78,5 +77,16 @@ class Measure
     {
         
     }
+            
+    public function getSaveProperties()
+    {
+        return array('id', 'name', 'unit', 'lang');
+    }
+
+    protected function setId()
+    {
+        $this->id = md5($this->name . $this->unit. $this->lang);
+    }
+
 }
 

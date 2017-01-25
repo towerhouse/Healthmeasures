@@ -2,35 +2,39 @@
 
 namespace Healthmeasures\Measurement;
 
-class Value
+class Value extends Persistance
 {
     /**
      *
      * @var type Measure
      */
-    protected $measure;
+    protected $measure_id;
     
     /**
-     * Identifier for the unique value of a measure
+     * Owner of the measure
      * @var string
      */
-    protected $id;
+    protected $owner_id;
     
-    /**
-     * Date when the measure was taken
-     * @var timestamp 
-     */
-    protected $date;
+    protected $created_at;
+
     
     public function __construct($id, Measure $measure, $date = null)
     {
-        $this->id = $id;
-        $this->measure = $measure;
-        $this->date = !$date ? date("Y-m-d H:i:s") : $date;
+        parent::__construct();
+        $this->owner_id = $id;
+        $this->measure_id = $measure->getId();
+        $this->created_at = !$date ? date("Y-m-d H:i:s") : $date;
     }
-    
-    public function save()
+
+    public function getSaveProperties()
     {
-        
+        return array('id', 'owner_id', 'measure_id', 'created_at');
     }
+
+    public function setId()
+    {
+        $this->id = md5($this->owner_id . $this->measure_id);
+    }
+
 }
