@@ -26,8 +26,6 @@ $mm3->save();
 $vv2 = new Value(1, '1ecf550e3e22e6f96cb9c1d8105118d2', '2016-12-30 08:00:00', 98);
 var_export($vv2);
 $vv2->save();
-var_export($vv2->getLastConnectionError());
-
 
 $mm->getMeasuresByLang('es');
 
