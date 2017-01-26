@@ -4,8 +4,6 @@ namespace Healthmeasures\Measurement;
 
 class Measure extends Persistance
 {
-    protected $id;
-    
     protected $name;
 	
     protected $unit;
@@ -15,7 +13,7 @@ class Measure extends Persistance
     
     protected static $default_language = "en";
     
-    public function __construct($name, $unit, $lang = null)
+    public function __construct($name = null, $unit = null, $lang = null)
     {
         parent::__construct();
         $this->name = $name;
@@ -24,19 +22,8 @@ class Measure extends Persistance
         $this->setId();
     }
     
-    /**
-     * Receives the path to a cvs file with 2 mandatory columns: name, unit.
-     * If you don't want to specify the language use the static method 
-     * setDefaultLang($lang).
-     * A measure is unique if their 3 properties are different, otherwise one is discarded.
-     * @param string filepath to a $cvs_file_no_header
-     * @return Array[Measure]
-     */
-    public static function bulkConstructor($cvs_file_no_header)
-    {
-        
-    }
     
+        
     /**
      * Sets the default language for every input
      * @param string $lang
@@ -82,8 +69,8 @@ class Measure extends Persistance
     {
         return array('id', 'name', 'unit', 'lang');
     }
-
-    protected function setId()
+    
+    public function setId()
     {
         $this->id = md5($this->name . $this->unit. $this->lang);
     }

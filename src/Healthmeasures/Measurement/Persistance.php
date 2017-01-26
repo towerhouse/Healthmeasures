@@ -5,6 +5,7 @@ use Healthmeasures\Configuration\Application;
 
 abstract class Persistance
 { 
+    protected $id;
     protected static $connection = null;
     protected static $app = null;
     protected $engine;
@@ -20,6 +21,59 @@ abstract class Persistance
         $this->engine = static::$app->config->get('database.db_engine');
         $this->fetch_style = static::$app->config->get('database.fetch');
     }
+        
+    /**
+     * Receives the path to a cvs file with the object columns.
+     * If you don't want to specify the language use the static method 
+     * setDefaultLang($lang).
+     * @param string filepath to a $cvs_file_with_header
+     * @param boolean set store to true if you want persistance
+     * @return Array[Object]
+     */
+    public function bulkConstructor($cvs_file_with_header, $store = true)
+    {
+        $csvFile = file($cvs_file_with_header);
+        $data = array();
+        foreach ($csvFile as $line) {
+            $data[] = str_getcsv($line);
+        }
+        
+        if ($store) {
+            //Header must always be present on your csv file!
+            /** Sample
+             * array (
+                0 => 
+                array (
+                  0 => 'name',
+                  1 => 'unit',
+                ),
+                1 => 
+                array (
+                  0 => 'sistole',
+                  1 => '',
+                ),
+             )
+             */
+            $class = get_class($this);
+            $storage = array();
+            
+            $header = $data[0];
+            if (count(($data > 1))) {
+                for($i = 1; $i < count($data); $i++) {
+                    $object = new $class();
+                    foreach ($header as $index => $prop) {
+                        $object->$prop = $data[$i][$index];
+                    }
+                    $object->setId();
+                    $object->save();
+                    $storage[] = $object;
+                }
+                return $storage;
+            }
+        }
+        
+        return $data;
+    }
     
     /**
      * Saves any persistable record using reflection.
@@ -32,25 +86,25 @@ abstract class Persistance
         $props = $this->getSaveProperties();
         $values = array();
         
+        //Handle created_at attribute
+        if (!in_array('created_at', $props)) {
+            $props[] = 'created_at';
+            $this->created_at = date("Y-m-d H:i:s");
+        }
+        
         //Values for the attributes of the tables
         foreach ($props as $p) {
             $values[] = $this->$p;
         }
-        
-        //Handle created_at attribute
-        if (!in_array('created_at', $props)) {
-            $props[] = 'created_at`';
-            $values[] = date("Y-m-d H:i:s");
-        }
-        
+
         //Terms to form the pdo query
-        $prop_names = '(`' . implode('`,`', $props) . ')';
+        $prop_names = '(`' . implode('`,`', $props) . '`)';
         $placeholders = '(' . implode(',', array_fill(0, count($props), '?')) . ')';
         $sql = "REPLACE INTO $table_name $prop_names VALUES $placeholders";
         $statement = static::$connection->prepare($sql);
         $statement->execute($values);
     }
-    
+        
     public function getObjectsByCriteria(Array $conditions, Array $raw_conditions = array())
     {
         //Metadata
@@ -119,7 +173,12 @@ abstract class Persistance
      * Sets an string id to identify the record.
      */
     protected abstract function setId();
-        
+ 
+    public function getId()
+    {
+        return $this->id;
+    }
+    
     /**
      * Checks if the persistance tables are there
      * otherwise create them.
@@ -142,7 +201,7 @@ abstract class Persistance
         $values_create = "CREATE TABLE IF NOT EXISTS $values_table (
             id VARCHAR(100) NOT NULL,
             owner_id VARCHAR(100) NOT NULL,
-            measure_id int NOT NULL,
+            measure_id VARCHAR(100) NOT NULL,
             `value` VARCHAR(100),
             created_at DATETIME NOT NULL,
             PRIMARY KEY(id)
@@ -164,12 +223,17 @@ abstract class Persistance
         if (!static::$connection) {
             if ($this->engine == 'mysql') {
                 $data = static::$app->config->get('database.connections.mysql');
-                $dbh = new \PDO("mysql:host={$data['host']};dbname={$data['database']}", $data['username'], $data['password']);
+                $dbh = new \PDO("mysql:host={$data['host']};dbname={$data['database']};charset={$data['charset']}", $data['username'], $data['password']);
             } else {
                 $data = static::$app->config->get('database.connections.mysql');
                 $dbh = new \PDO('sqlite:' . $data['database']);    
             }
             static::$connection = $dbh;
         }
+    }
+    
+    public function getLastConnectionError()
+    {
+        return static::$connection->errorInfo();
     }
 }

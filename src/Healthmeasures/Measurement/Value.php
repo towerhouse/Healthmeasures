@@ -19,14 +19,16 @@ class Value extends Persistance
     protected $created_at;
 
     
-    public function __construct($id, Measure $measure, $date = null)
+    public function __construct($owner_id = null, $measure_id = null, $date = null, $value = null)
     {
         parent::__construct();
-        $this->owner_id = $id;
-        $this->measure_id = $measure->getId();
+        $this->owner_id = $owner_id;
+        $this->measure_id = $measure_id;
+        $this->value = $value;
         $this->created_at = !$date ? date("Y-m-d H:i:s") : $date;
+        $this->setId();
     }
-    
+       
     /** Static getters to retrieve collections or one object **/
     
     public function getValueById($id)
@@ -51,12 +53,12 @@ class Value extends Persistance
       
     public function getSaveProperties()
     {
-        return array('id', 'owner_id', 'measure_id', 'created_at');
+        return array('id', 'owner_id', 'measure_id', 'value', 'created_at');
     }
-
+    
     public function setId()
     {
-        $this->id = md5($this->owner_id . $this->measure_id);
+        $this->id = md5($this->owner_id . $this->measure_id . $this->value . $this->created_at);
     }
 
 }
