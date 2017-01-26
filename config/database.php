@@ -29,7 +29,7 @@ return array(
 	|
 	*/
 
-	'fetch' => PDO::FETCH_ASSOC,
+	'fetch' => PDO::FETCH_OBJ,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -60,7 +60,7 @@ return array(
 
 		'sqlite' => array(
 			'driver'   => 'sqlite',
-			'database' => __DIR__.'/../database/healthmeasures.sqlite',	
+			'database' => __DIR__ . '/healthmeasures.sqlite',	
 		),
 
 		'mysql' => array(

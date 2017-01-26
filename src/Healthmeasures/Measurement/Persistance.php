@@ -118,15 +118,15 @@ abstract class Persistance
         }
         $sql = "SELECT * FROM $table_name"; 
         if (count($conditions)) {
-            $sql .= " WHERE " . implode('AND', $conditions_array);
+            $sql .= " WHERE " . implode(' AND ', $conditions_array);
         }
         
         if (count($raw_conditions)) {
-            $connector = count($conditions) ? 'AND' : 'WHERE';
+            $connector = count($conditions) ? ' AND ' : ' WHERE ';
             $sql .= $connector . implode('AND', $raw_conditions);
         }
-        
-        $statement = static::$connection->prepare($sql);
+
+        $statement = static::$connection->prepare(trim($sql));
         $statement->execute($values);
         return $statement->fetchAll($this->fetch_style);
     }

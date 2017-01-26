@@ -8,15 +8,15 @@ class Value extends Persistance
      *
      * @var type Measure
      */
-    protected $measure_id;
+    public $measure_id;
     
     /**
      * Owner of the measure
      * @var string
      */
-    protected $owner_id;
+    public $owner_id;
     
-    protected $created_at;
+    public $created_at;
 
     
     public function __construct($owner_id = null, $measure_id = null, $date = null, $value = null)
@@ -47,7 +47,7 @@ class Value extends Persistance
         $end = ($end == "now") ? date("Y-m-d H:i:s") : $end;
         return $this->getObjectsByCriteria(
                 array('owner_id' => $owner_id, 'measure_id' => $measure_id), 
-                array('created_at' => "BETWEEN $start AND $end")
+                array("created_at BETWEEN '$start' AND '$end' ORDER BY created_at ASC")
         );
     }
       

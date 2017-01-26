@@ -4,12 +4,12 @@ namespace Healthmeasures\Measurement;
 
 class Measure extends Persistance
 {
-    protected $name;
+    public $name;
 	
-    protected $unit;
+    public $unit;
 	
     /**The language this measure is taken (en, es, fr, etc)**/
-    protected $lang;
+    public $lang;
     
     protected static $default_language = "en";
     
