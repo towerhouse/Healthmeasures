@@ -82,7 +82,7 @@ measure_id,value,owner_id,created_at
 
 Notice that the owner_id comes from an external system, while measure_id belongs to Healthmeasures. In this case measure_id "2577a46ca60e3ff293ccb0113e6a59c0" it's the id for the measure "waist".
 
-Finally we retrieve all the values that the person with identifier 1 had for his waist starting from "2016-01-01" and ending in the most recent value (otherwise you specify it on another last parameter)
+Finally we retrieve all the values that the person with identifier 1 had for his waist starting from "2016-01-01" and ending in the most recent date (that would be today, otherwise you specify it on another last parameter)
 
 ```
 $vals = $v->getValuesByDate(1, '2577a46ca60e3ff293ccb0113e6a59c0', "2016-01-01");
