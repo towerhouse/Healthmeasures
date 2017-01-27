@@ -88,10 +88,24 @@ Finally we retrieve all the values that the person with identifier 1 had for his
 $vals = $v->getValuesByDate(1, '2577a46ca60e3ff293ccb0113e6a59c0', "2016-01-01");
 ```
 
-Let's create a Stats object and pass the values to generate a linear graph. In the first parameter you can specify a path and the picture will be saved there, otherwise it will be rendered to the client through the browser.
+Let's create a Stats object and pass the values to generate a linear graph. You can specify a path and the picture will be saved there, otherwise it will be rendered to the client through the browser.
 
 ```
 $stats = new Stats($vals);
-$stats->generateDateMeasureGraph("", Stats::GRAPH_LINEAR);
+$stats->image_path = "linear_sample.jpg";
+$stats->generateDateMeasureGraph(Stats::GRAPH_LINEAR);
 ```
 
+Finally, you can render a nice and simple html report to your browser with all the details
+
+```
+$stats = new Stats($vals);
+$stats->image_path = "linear_bar.jpg";
+if (!file_exists("linear_bar.jpg")) {
+    $stats->generateDateMeasureGraph(Stats::GRAPH_LINEAR);
+}
+echo $stats->getHtmlReport();
+```
+
+This is a pdf I took from the html page.
+![alt tag](https://raw.githubusercontent.com/towerhouse/Healthmeasures/tree/master/test/report.pdf)
