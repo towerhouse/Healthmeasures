@@ -108,4 +108,8 @@ echo $stats->getHtmlReport();
 ```
 
 This is a pdf I took from the html page.
-![alt tag](https://github.com/towerhouse/Healthmeasures/tree/master/test/report.pdf)
+https://github.com/towerhouse/Healthmeasures/tree/master/test/report.pdf
+
+...and this is the image of the graph
+![Alt text](https://raw.githubusercontent.com/towerhouse/Healthmeasures/master/test/linear_bar.jpg?raw=true)
+
