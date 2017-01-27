@@ -8,19 +8,33 @@ $cssReport = array();
 
 $cssReport['today_day_format'] = 'l jS \of F Y h:i:s A';
 
+$cssReport['row_value'] = <<< HTML
+<tr>
+    <td class="priority3">{{ key }}</td>
+    <td class="number">{{ value }}</td>
+</tr>
+HTML;
+
+$cssReport['row_stat'] = <<< HTML
+<tr>
+    <td class="priority2">{{ key }}</td>
+    <td class="number">{{ value }}</td>
+</tr>
+HTML;
+
 $cssReport['html'] = <<< HTML
 <html>
    <head>
-      <title>{{report_title}}</title>
-      <style>{{css}}</style>
+      <title>{{ report_title }}</title>
+      <style>{{ css }}</style>
       <body>
-        <h1>{{report_title}}</h1>
+        <h1>{{ report_title }}</h1>
         <div class="metadata">
            <table>
               <tbody>
                  <tr>
                     <td class="em">Report title:</td>
-                    <td>{{report_title}}</td>
+                    <td>{{ report_title }}</td>
                  </tr>
                  <tr>
                     <td class="em">Date:</td>
@@ -34,16 +48,16 @@ $cssReport['html'] = <<< HTML
            </table>
         </div>
         <div class="summary">
-            <h2>Graph and stat values</h2>
+            <h2>Graph</h2>
             <img src="{{ graph_image }}">
+        </div>
+        <div class="summary">
+            <h2>Stat values</h2>
             <table>
                 <tbody>
                     <tr class="tableHeader">
-                        <th>Max</th>
-                        <th>Min</th>
-                        <th>Avg</th>
-                        <th>Mode</th>
-                        <th>Median</th>
+                        <th>Stat</th>
+                        <th>Value</th>
                     </tr>
                     {{ info_values }}
                 </tbody>

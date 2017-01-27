@@ -37,5 +37,9 @@ $vv->bulkConstructor(__DIR__ . '/CVS/Value.csv');
 $v = new Value();
 $vals = $v->getValuesByDate(1, '2577a46ca60e3ff293ccb0113e6a59c0', "2016-01-01");
 $stats = new Stats($vals);
-$stats->generateDateMeasureGraph("", Stats::GRAPH_LINEAR);
-//$stats->generateDateMeasureGraph("", Stats::GRAPH_BARS);
+$stats->image_path = "linear_bar.jpg";
+if (!file_exists("linear_bar.jpg")) {
+    $stats->generateDateMeasureGraph(Stats::GRAPH_LINEAR);
+}
+echo $stats->getHtmlReport();
+

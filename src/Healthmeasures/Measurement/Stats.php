@@ -5,6 +5,7 @@ namespace Healthmeasures\Measurement;
 use Amenadiel\JpGraph\Graph;
 use Amenadiel\JpGraph\Plot;
 use Amenadiel\JpGraph\Graph\DateLine;
+use Healthmeasures\Configuration\Application;
 
 class Stats
 {
@@ -40,6 +41,7 @@ class Stats
     /**Size of the graph**/
     public $graph_width = 1024;
     public $graph_height = 534;
+    /**Use this var if you want to store your graph as jpg instead of render it to the browser**/
     public $image_path;
 
     public function __construct($data)
@@ -67,6 +69,15 @@ class Stats
         $this->yAxis = $datay;
     }
     
+    protected function getMedian()
+    {
+        $vals = $this->yAxis;
+        $count = count($vals);
+        sort($vals);
+        $mid = floor(($count-1)/2);
+        return ($vals[$mid] + $vals[$mid + 1 - $count % 2]) / 2;
+    }
+
     protected function setSimpleStats()
     {
         $this->max_value = max($this->yAxis);
@@ -75,7 +86,8 @@ class Stats
         
         $values = array_count_values($this->yAxis); 
         $this->mode_value = array_search(max($values), $values);
-        $this->median_value = rsort($values)[0];
+
+        $this->median_value = $this->getMedian();
     }
     
     protected function setMeasure()
@@ -102,10 +114,8 @@ class Stats
      * @see constants
      * @return bitmap
      */    
-    public function generateDateMeasureGraph($image_path = "", $graph_type = "linear")
-    {
-        $this->image_path = $image_path;
-        
+    public function generateDateMeasureGraph($graph_type = "linear")
+    {        
         DEFINE('NDATAPOINTS', count($this->yAxis));
         DEFINE('SAMPLERATE', 100);
         $start = $this->xAxis[0]; 
@@ -144,7 +154,8 @@ class Stats
                 $graph->Add($line); 
         }
         
-        $graph->Stroke($image_path);
+        $path = $this->image_path ? $this->image_path : '';
+        $graph->Stroke($path);
     }
     
     /**
@@ -166,6 +177,29 @@ class Stats
     
     public function getHtmlReport()
     {
-        static::$app = new Application();
+        $app = new Application();
+        $info_values = array();
+        $pattern1 = $app->config->get('htmlReport.row_stat');
+        $pattern2 = $app->config->get('htmlReport.row_value');
+        $all = $this->getCompleteStatsInformation();
+        
+        $date_value = $all['Data Table'];
+        unset($all['Data Table']);
+        foreach ($all as $key => $val) {
+            $info_values[] = str_replace(array('{{ key }}', '{{ value }}'), array($key, $val), $pattern1);
+        }
+        
+        foreach ($date_value as $key => $val) {
+            $values[] = str_replace(array('{{ key }}', '{{ value }}'), array($key, $val), $pattern2);
+        }
+
+        $html = $app->config->get('htmlReport.html');
+        $html = str_replace(
+                array('{{ report_title }}', '{{ css }}', '{{ today_date }}', '{{ graph_image }}', '{{ info_values }}', '{{ values }}',),
+                array($this->getTitle(), $app->config->get('htmlReport.css'), date($app->config->get('htmlReport.today_day_format')),
+                    $this->image_path, implode('', $info_values), implode('', $values)
+                ), $html
+        );
+        return $html;
     }
 }
