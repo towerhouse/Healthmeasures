@@ -16,6 +16,7 @@ class Stats
     protected $data;
     /** created_at values **/
     protected $xAxis;
+    protected $createdAts;
     /** Values from the measures **/
     protected $yAxis;
     /** Max value in the measures **/
@@ -39,6 +40,7 @@ class Stats
     /**Size of the graph**/
     public $graph_width = 1024;
     public $graph_height = 534;
+    public $image_path;
 
     public function __construct($data)
     {
@@ -52,13 +54,16 @@ class Stats
     {
         $datay = array();
         $datax = array();
+        $createdAts = array();
         
         foreach ($this->data as $val) {
             $datax[] = strtotime(explode(" ", $val->created_at)[0]); //only leave the date part
+            $createdAts[] = $val->created_at;
             $datay[] = $val->value;
         }
         
         $this->xAxis = $datax;
+        $this->createdAts = $createdAts;
         $this->yAxis = $datay;
     }
     
@@ -99,6 +104,8 @@ class Stats
      */    
     public function generateDateMeasureGraph($image_path = "", $graph_type = "linear")
     {
+        $this->image_path = $image_path;
+        
         DEFINE('NDATAPOINTS', count($this->yAxis));
         DEFINE('SAMPLERATE', 100);
         $start = $this->xAxis[0]; 
@@ -138,5 +145,27 @@ class Stats
         }
         
         $graph->Stroke($image_path);
+    }
+    
+    /**
+     * It returns a table with X and Y values interpolated
+     * and all the important stat measures.
+     */
+    public function getCompleteStatsInformation()
+    {
+        $info = array();
+        $info['Data Table'] = array_combine($this->createdAts, $this->yAxis);
+        $info['Max'] = $this->max_value;
+        $info['Min'] = $this->min_value;
+        $info['Avg'] = $this->avg_value;
+        $info['Mode'] = $this->mode_value;
+        $info['Median'] = $this->median_value;
+        
+        return $info;
+    }
+    
+    public function getHtmlReport()
+    {
+        static::$app = new Application();
     }
 }
