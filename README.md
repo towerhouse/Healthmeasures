@@ -108,4 +108,4 @@ echo $stats->getHtmlReport();
 ```
 
 This is a pdf I took from the html page.
-![alt tag](https://raw.githubusercontent.com/towerhouse/Healthmeasures/tree/master/test/report.pdf)
+![alt tag](https://github.com/towerhouse/Healthmeasures/tree/master/test/report.pdf)
