@@ -60,7 +60,7 @@ return array(
 
 		'sqlite' => array(
 			'driver'   => 'sqlite',
-			'database' => __DIR__ . '/healthmeasures.sqlite',	
+			'database' =>  __DIR__ . '/../database/mbhealth',	
 		),
 
 		'mysql' => array(

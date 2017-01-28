@@ -31,8 +31,8 @@ $mm->getMeasuresByLang('es');
 $mm->getAll();
 
 Measure::setDefaultLanguage('es');
-$mm->bulkConstructor(__DIR__ . '/CVS/Measure.csv');
-$vv->bulkConstructor(__DIR__ . '/CVS/Value.csv');
+$mm->bulkConstructor(__DIR__ . '/CSV/Measure.csv');
+$vv->bulkConstructor(__DIR__ . '/CSV/Value.csv');
 
 $v = new Value();
 $vals = $v->getValuesByDate(1, '2577a46ca60e3ff293ccb0113e6a59c0', "2016-01-01");
