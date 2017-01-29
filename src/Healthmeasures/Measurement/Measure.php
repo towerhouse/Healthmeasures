@@ -11,6 +11,8 @@ class Measure extends Persistance
     /**The language this measure is taken (en, es, fr, etc)**/
     public $lang;
     
+    public $created_at;
+    
     protected static $default_language = "en";
     
     public function __construct($name = null, $unit = null, $lang = null)
@@ -31,6 +33,11 @@ class Measure extends Persistance
     public static function setDefaultLanguage($lang)
     {
         static::$default_language = $lang;
+    }
+    
+    public static function getDefaultLanguage()
+    {
+        return static::$default_language;
     }
     
     /** Static getters to retrieve collections or one object **/
@@ -73,6 +80,14 @@ class Measure extends Persistance
     public function setId()
     {
         $this->id = md5($this->name . $this->unit. $this->lang);
+    }
+    
+    public function save()
+    {
+        if (!$this->name) {
+            throw new \Exception("The name in a Measure object cannot be null");
+        }
+        return parent::save();
     }
 
 }

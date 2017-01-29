@@ -101,8 +101,10 @@ abstract class Persistance
         $prop_names = '(`' . implode('`,`', $props) . '`)';
         $placeholders = '(' . implode(',', array_fill(0, count($props), '?')) . ')';
         $sql = "REPLACE INTO $table_name $prop_names VALUES $placeholders";
+        ///echo $sql; var_export($values);
         $statement = static::$connection->prepare($sql);
         $statement->execute($values);
+        return $this;
     }
         
     public function getObjectsByCriteria(Array $conditions, Array $raw_conditions = array())
@@ -128,7 +130,18 @@ abstract class Persistance
 
         $statement = static::$connection->prepare(trim($sql));
         $statement->execute($values);
-        return $statement->fetchAll($this->fetch_style);
+        $data = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        $objects = array();
+        //Hydratation of properties to create objects
+        $classname = get_class($this);
+        foreach ($data as $d) {
+            $o = new $classname();
+            $objects[] = $o;
+            foreach ($d as $key => $val) {
+                $o->$key = $val;
+            }
+        }
+        return $objects;
     }
     
     public function getById($id)
@@ -141,6 +154,16 @@ abstract class Persistance
     {
         $all = $this->getObjectsByCriteria(array());
         return $all;
+    }
+    
+    public function countAll()
+    {
+        $table = $this->getTableName(get_class($this));
+        $sql = 'SELECT COUNT(1) FROM ' . $table;
+        $result = static::$connection->prepare($sql); 
+        $result->execute(); 
+        $number_of_rows = $result->fetchColumn();
+        return $number_of_rows;
     }
     
     /**
@@ -235,5 +258,17 @@ abstract class Persistance
     public function getLastConnectionError()
     {
         return static::$connection->errorInfo();
+    }
+    
+    public function __get($property) {
+        if (property_exists($this, $property)) {
+          return $this->$property;
+        }
+    }
+
+    public function __set($property, $value) {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
     }
 }

@@ -65,6 +65,14 @@ class MeasureTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($m1->getMeasuresByName($randName)));
     }
     
+    public function testSaveConstraintsAreMet()
+    {
+        $m = new Measure('', 'L', 'es');
+        //Empty object
+        $this->setExpectedException('\Exception');
+        $m->save();
+    }
+    
     protected function countCsvFileLines($csv)
     {
         $c =0;
