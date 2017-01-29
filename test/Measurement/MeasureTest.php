@@ -3,10 +3,16 @@
 namespace Healthmeasures\Test\Measurement;
 
 use Healthmeasures\Measurement\Measure;
-use Healthmeasures\Configuration\Application;
+
 
 class MeasureTest extends \PHPUnit_Framework_TestCase
 {
+    public function testCheckEnv()
+    {
+        $env = \Dotenv::load(__DIR__ . '/../../');
+        $this->assertEquals('test', getenv('APP_ENV'), "Your env is $env ");
+    }
+
     /**
      * Checks if the language change for every object after
      * using the static method setDefaultLanguage
@@ -20,42 +26,59 @@ class MeasureTest extends \PHPUnit_Framework_TestCase
         $m = new Measure();
         $this->assertEquals('es', $m->lang);
     }
+  
+        
+    public function testStoreSingleObjectDb()
+    {
+        $m = new Measure("waist", "cms", "en");
+        $this->assertNotNull($m->getId(), "Not saved measure has id " . $m->getId());
+        $w = $m->save(); //$w is the same object as $m
+        $this->assertNotNull($w->getId(), "Saved measure has id " . $w->getId());
+        $this->assertGreaterThan(0, $m->countAll());
+        $this->assertEquals($m->getId(), $w->getId(), "The waist measure was stored on the database with id " . $m->getId());
+    }
     
     public function testBulkConstructor()
     {
         Measure::setDefaultLanguage('es');
         $mm = new Measure();
-        
-        //$this->cleanDb();
-        $mm->bulkConstructor(__DIR__ . '/../CSV/Measure.csv');
+
+        $path = __DIR__ . '/../CSV/Measure.csv';
+        $mm->bulkConstructor($path);
         $mm->getAll();
+        $csv_rows_count = $this->countCsvFileLines($path);
+        $this->assertGreaterThanOrEqual($csv_rows_count, $mm->countAll());
     }
     
-    public function testCleanSqliteDb()
+    public function testSameMeasuresAreNotStoredTwice()
     {
-        //Remove sqlite database and reconstruct
-        $app = new Application();
-        $app->config->set('database.db_engine', 'sqlite');
-        $this->assertEquals($app->config->get('database.db_engine'), 'sqlite');
-        $file = $app->config->get('database.connections.sqlite.database');
-        if (file_exists($file)) {
-            unlink($file);
-            $this->assertEquals(file_exists($file), false);
-        } else {
-            $this->assertTrue(true);
+        $randName = "DummyMeasure " . strtotime('YmdHis');
+        $m1 = new Measure($randName, "cm", "en");
+        $m1->save();
+        $id = $m1->getId();
+        $this->assertEquals($m1->getId(), $m1->getById($id)->getId());
+
+        $m2 = new Measure($randName, "cm", "en");
+        $m2->save();
+        $id2 = $m2->getId();
+        $this->assertEquals($id, $id2);
+        $this->assertEquals(1, count($m1->getMeasuresByName($randName)));
+    }
+    
+    protected function countCsvFileLines($csv)
+    {
+        $c =0;
+        $fp = fopen($csv, "r");
+        if ($fp) {
+            while (!feof($fp)) {
+                $content = fgets($fp);
+                if ($content) {
+                    $c++;
+                }
+            }
         }
-    }
-    
-    public function testCreateSqliteDb()
-    {
-        //Remove sqlite database and reconstruct
-        $app = new Application();
-        $app->config->set('database.db_engine', 'sqlite');
-        $file = $app->config->get('database.connections.sqlite.database');
-        
-        $m = new Measure();
-        $m->save();
-        $this->assertEquals(file_exists($file), true, "$file is supposed to exist");
+        fclose($fp);
+        return $c;
     }
 }
 

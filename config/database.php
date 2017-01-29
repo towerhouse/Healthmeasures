@@ -29,7 +29,7 @@ return array(
 	|
 	*/
 
-	'fetch' => PDO::FETCH_OBJ,
+	'fetch' => PDO::FETCH_ASSOC,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return array(
 	|
 	*/
 
-	'db_engine' => 'mysql',
+	'db_engine' => getenv('DB_CONNECTION'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -60,7 +60,7 @@ return array(
 
 		'sqlite' => array(
 			'driver'   => 'sqlite',
-			'database' =>  __DIR__ . '/../database/mbhealth',	
+			'database' =>  'mbhealth',	
 		),
 
 		'mysql' => array(
