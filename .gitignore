@@ -3,6 +3,9 @@ vendor
 composer.phar
 composer.lock
 
+# custom files
+mbhealth
+
 # phpunit files
 phpunit.phar
 phpunit.xml
