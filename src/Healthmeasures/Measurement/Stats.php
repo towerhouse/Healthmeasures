@@ -14,12 +14,12 @@ class Stats
     const GRAPH_BARS = "bars";
     
     /** Data receieved to make the graph **/
-    protected $data;
+    public $data;
     /** created_at values **/
-    protected $xAxis;
-    protected $createdAts;
+    public $xAxis;
+    public $createdAts;
     /** Values from the measures **/
-    protected $yAxis;
+    public $yAxis;
     /** Max value in the measures **/
     public $max_value;
     /** Min value in the measures **/
@@ -84,7 +84,7 @@ class Stats
         $this->min_value = min($this->yAxis);
         $this->avg_value = array_sum($this->yAxis) / count($this->yAxis);
         
-        $values = array_count_values($this->yAxis); 
+        $values = array_count_values($this->yAxis); var_export($values);var_export($this->yAxis);
         $this->mode_value = array_search(max($values), $values);
 
         $this->median_value = $this->getMedian();
@@ -115,9 +115,13 @@ class Stats
      * @return bitmap
      */    
     public function generateDateMeasureGraph($graph_type = "linear")
-    {        
-        DEFINE('NDATAPOINTS', count($this->yAxis));
-        DEFINE('SAMPLERATE', 100);
+    {    
+        if (!defined('NDATAPOINTS')) {
+            DEFINE('NDATAPOINTS', count($this->yAxis));
+        }
+        if (!defined('SAMPLERATE')) {
+            DEFINE('SAMPLERATE', 100);
+        }
         $start = $this->xAxis[0]; 
         $end = $start + NDATAPOINTS * SAMPLERATE;
         

@@ -9,6 +9,8 @@ use Healthmeasures\Measurement\Stats;
 
 class StatsTest extends \PHPUnit_Framework_TestCase
 {
+    protected $stats;
+    
     public function testCheckEnv()
     {
         $env = \Dotenv::load(__DIR__ . '/../../');
@@ -21,6 +23,21 @@ class StatsTest extends \PHPUnit_Framework_TestCase
         $m->save();
         return $m;
     } 
+    
+    protected function getDefaultOwnerId()
+    {
+        return 'test';
+    }
+    
+    protected function getDefaultStats()
+    {
+        if (!$this->stats) {
+            $v = new Value();
+            $values = $v->getValuesByDate($this->getDefaultOwnerId(), $this->getDefaultMeasure()->getId(), '2016-01-01');
+            $this->stats = new Stats($values);
+        }
+        return $this->stats;
+    }
     
     public function testBulkConstructor()
     {
@@ -45,52 +62,61 @@ class StatsTest extends \PHPUnit_Framework_TestCase
     
     public function testAxisCountIsTheSameAsTestDataCount()
     {
-        
+        $stats = $this->getDefaultStats();
+        $count = count($stats->data);
+        $this->assertTrue($count > 10);
+        $this->assertEquals($count, count($stats->xAxis));
+        $this->assertEquals($count, count($stats->yAxis));
     }
     
     public function testMedian()
     {
-        
+        $stats = $this->getDefaultStats();
+        $this->assertEquals(97, $stats->median_value);
     }
     
     public function testMax()
     {
-        
+        $stats = $this->getDefaultStats();
+        $this->assertEquals(98, $stats->max_value);
     }
 
     public function testMin()
     {
-        
+        $stats = $this->getDefaultStats();
+        $this->assertEquals(93, $stats->min_value);
     }
     
     public function testAvg()
     {
-        
+        $stats = $this->getDefaultStats();
+        $this->assertEquals(96.35, $stats->avg_value);
     }
 
     public function testMode()
     {
-        
+        $stats = $this->getDefaultStats();
+        $this->assertEquals(98, $stats->mode_value);
     }
     
     public function testDefaultTitle()
     {
-        
+        $m = $this->getDefaultMeasure();
+        $stats = $this->getDefaultStats();
+        return $this->assertEquals($m->name . " ({$m->unit})", $stats->getDefaultTitle());
     }
     
-    public function testGraphImageIsGenerated()
+    public function testGraphImageIsGeneratedLinear()
     {
+        $stats = $this->getDefaultStats();
+        $rand = time() + rand(500, 600);
+        $stats->image_path = "test_linear_$rand.jpg";
+        $stats->generateDateMeasureGraph(Stats::GRAPH_LINEAR);
+        $this->assertTrue(file_exists($stats->image_path));
         
-    }
-    
-    public function testGetCompleteStatsInformation()
-    {
-        
-    }
-    
-    public function testHtmlReportIsGenerated()
-    {
-        
+        $stats->image_path = "test_bar_$rand.jpg";
+        $stats->generateDateMeasureGraph(Stats::GRAPH_BARS);
+        $this->assertTrue(file_exists($stats->image_path));
     }
     
     protected function countCsvFileLines($csv)
