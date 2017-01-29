@@ -49,14 +49,16 @@ class StatsTest extends \PHPUnit_Framework_TestCase
         $v->bulkConstructor($path);
         $v->getAll();
         $csv_rows_count = $this->countCsvFileLines($path);
-        $db_rows_count = $v->countAll();
-        $this->assertGreaterThanOrEqual($csv_rows_count, $db_rows_count, "$csv_rows_count is greater than $db_rows_count");
+        $db_rows_count = count($v->getValuesByDate($this->getDefaultOwnerId(), $this->getDefaultMeasure()->getId(), '2016-01-01'));
+        
+        //Exclude the header value from $csv_rows_count
+        $this->assertEquals($csv_rows_count - 1, $db_rows_count, "$csv_rows_count is equal than $db_rows_count");
         
         //Run again and the number of values in the database should be the same
         $v2 = new Value();
         $v2->bulkConstructor($path);
         $v2->getAll();
-        $db_rows_count2 = $v2->countAll();
+        $db_rows_count2 = count($v->getValuesByDate($this->getDefaultOwnerId(), $this->getDefaultMeasure()->getId(), '2016-01-01'));
         $this->assertEquals($db_rows_count, $db_rows_count2, "Run again and the number of values in the database should be the same $db_rows_count == $db_rows_count2");
     }
     
@@ -90,7 +92,7 @@ class StatsTest extends \PHPUnit_Framework_TestCase
     public function testAvg()
     {
         $stats = $this->getDefaultStats();
-        $this->assertEquals(96.35, $stats->avg_value);
+        $this->assertEquals(round(96.35), round($stats->avg_value));
     }
 
     public function testMode()
@@ -113,10 +115,12 @@ class StatsTest extends \PHPUnit_Framework_TestCase
         $stats->image_path = "test_linear_$rand.jpg";
         $stats->generateDateMeasureGraph(Stats::GRAPH_LINEAR);
         $this->assertTrue(file_exists($stats->image_path));
+        unlink($stats->image_path);
         
         $stats->image_path = "test_bar_$rand.jpg";
         $stats->generateDateMeasureGraph(Stats::GRAPH_BARS);
         $this->assertTrue(file_exists($stats->image_path));
+        unlink($stats->image_path);
     }
     
     protected function countCsvFileLines($csv)
@@ -153,7 +157,7 @@ class StatsTest extends \PHPUnit_Framework_TestCase
         fclose($output);
 
         //clean up
-        unlink($csv_path);// Delete obsolete BD
+        unlink($csv_path);// Delete obsolete csv
         rename($csv_path . '2', $csv_path); //Rename temporary to new
     }
 }

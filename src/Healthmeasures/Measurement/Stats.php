@@ -84,7 +84,7 @@ class Stats
         $this->min_value = min($this->yAxis);
         $this->avg_value = array_sum($this->yAxis) / count($this->yAxis);
         
-        $values = array_count_values($this->yAxis); var_export($values);var_export($this->yAxis);
+        $values = array_count_values($this->yAxis);
         $this->mode_value = array_search(max($values), $values);
 
         $this->median_value = $this->getMedian();
@@ -95,12 +95,15 @@ class Stats
         $val = $this->data[0];
         $m = new Measure(); 
         $this->measure = $m->getById($val->measure_id);
+        if (!$this->measure) {
+            throw new \Exception("Measure with id `{$val->measure_id}` not found, this stats report will be unstable");
+        }
     }
 
 
     public function getDefaultTitle()
     {
-        return $this->measure->name . " ({$this->measure->unit})";
+        return $this->measure ? $this->measure->name . " ({$this->measure->unit})" : "";
     }
     
     public function getTitle()

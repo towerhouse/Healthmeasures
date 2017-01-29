@@ -53,7 +53,7 @@ class Value extends Persistance
         $end = ($end == "now") ? date("Y-m-d H:i:s") : $end;
         return $this->getObjectsByCriteria(
                 array('owner_id' => $owner_id, 'measure_id' => $measure_id), 
-                array("created_at BETWEEN '$start' AND '$end' ORDER BY created_at ASC")
+                array("`value` IS NOT NULL AND created_at BETWEEN '$start' AND '$end' ORDER BY created_at ASC")
         );
     }
       

@@ -8,7 +8,7 @@ use Healthmeasures\Measurement\Measure;
 use Healthmeasures\Measurement\Value;
 use Healthmeasures\Measurement\Stats;
 
-$mm = new Measure("cintura", "cm", "es");
+$mm = new Measure("cintura", "cms", "es");
 $mm->save();
 $vv = new Value();
 
@@ -41,5 +41,6 @@ $stats->image_path = "linear_bar.jpg";
 if (!file_exists("linear_bar.jpg")) {
     $stats->generateDateMeasureGraph(Stats::GRAPH_LINEAR);
 }
+
 echo $stats->getHtmlReport();
 

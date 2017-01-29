@@ -101,7 +101,6 @@ abstract class Persistance
         $prop_names = '(`' . implode('`,`', $props) . '`)';
         $placeholders = '(' . implode(',', array_fill(0, count($props), '?')) . ')';
         $sql = "REPLACE INTO $table_name $prop_names VALUES $placeholders";
-        ///echo $sql; var_export($values);
         $statement = static::$connection->prepare($sql);
         $statement->execute($values);
         return $this;
