@@ -1,5 +1,5 @@
 {
-    "name": "Towerhouse/Healthmeasures",
+    "name": "towerhouse/healthmeasures",
     "description": "This class gives you the ability to generate health measures given a name and a unit, for instance: weight / pound or kilo. You can configure where to store them and them gather to collect their values by date given a username or other token. The library gives you the ability to generate graphs or other stats information. It's totally configurable, methods are well documented and comes with unit testing.",
     "type": "library",
     "keywords": ["health", "data"],
