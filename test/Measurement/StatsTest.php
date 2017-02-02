@@ -2,6 +2,7 @@
 
 namespace Healthmeasures\Test\Measurement;
 
+use Dotenv\Dotenv;
 use Healthmeasures\Measurement\Measure;
 use Healthmeasures\Measurement\Value;
 use Healthmeasures\Measurement\Stats;
@@ -13,8 +14,9 @@ class StatsTest extends \PHPUnit_Framework_TestCase
     
     public function testCheckEnv()
     {
-        $env = \Dotenv::load(__DIR__ . '/../../');
-        $this->assertEquals('test', getenv('APP_ENV'), "Your env is $env ");
+        $dotenv = new Dotenv(__DIR__ . '/../../');
+        $dotenv->load();
+        $this->assertEquals('test', getenv('APP_ENV'));
     }
 
     protected function getDefaultMeasure()

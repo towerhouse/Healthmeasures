@@ -2,6 +2,7 @@
 
 namespace Healthmeasures\Test\Measurement;
 
+use Dotenv\Dotenv;
 use Healthmeasures\Measurement\Measure;
 
 
@@ -9,8 +10,9 @@ class MeasureTest extends \PHPUnit_Framework_TestCase
 {
     public function testCheckEnv()
     {
-        $env = \Dotenv::load(__DIR__ . '/../../');
-        $this->assertEquals('test', getenv('APP_ENV'), "Your env is $env ");
+        $dotenv = new Dotenv(__DIR__ . '/../../');
+        $dotenv->load();
+        $this->assertEquals('test', getenv('APP_ENV'));
     }
 
     /**

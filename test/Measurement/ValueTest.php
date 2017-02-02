@@ -2,6 +2,7 @@
 
 namespace Healthmeasures\Test\Value;
 
+use Dotenv\Dotenv;
 use Healthmeasures\Measurement\Value;
 use Healthmeasures\Measurement\Measure;
 
@@ -18,8 +19,9 @@ class ValueTest extends \PHPUnit_Framework_TestCase
     
     public function testCheckEnv()
     {
-        $env = \Dotenv::load(__DIR__ . '/../../');
-        $this->assertEquals('test', getenv('APP_ENV'), "Your env is $env ");
+        $dotenv = new Dotenv(__DIR__ . '/../../');
+        $dotenv->load();
+        $this->assertEquals('test', getenv('APP_ENV'));
     }
         
     public function testStoreSingleObjectDb()
