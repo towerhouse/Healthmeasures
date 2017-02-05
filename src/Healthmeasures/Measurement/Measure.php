@@ -89,6 +89,19 @@ class Measure extends Persistance
         }
         return parent::save();
     }
+    
+    public function toArray()
+    {
+        return 
+            ['type' => 'Measure', 
+             'id' => $this->getId(), 
+             'attributes' => [
+                'unit' => $this->unit,
+                'lang' => $this->lang
+             ]
+            ];
+
+    }
 
 }
 

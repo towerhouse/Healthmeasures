@@ -209,4 +209,41 @@ class Stats
         );
         return $html;
     }
+    
+    public function getId()
+    {
+        return time();
+    }
+    
+    public function toArray()
+    {
+        return 
+            ['type' => 'Stats', 
+             'id' => $this->getId(), 
+             'attributes' => [
+                'xAxis' => $this->xAxis,
+                'yAxis' => $this->yAxis,
+                'max_value' => $this->max_value,
+                'min_value' => $this->min_value,
+                'avg_value' => $this->avg_value,
+                'median_value' => $this->median_value,
+                'mode_value' => $this->mode_value,
+                'title' => $this->title,
+                'legend' => $this->legend,
+                'color' => $this->color,
+                'graph_width' => $this->graph_width,
+                'graph_height' => $this->graph_height,
+                'image_path' => $this->image_path
+             ],
+             'relationships' => [
+                 'measure' => $this->measure,
+                 'data' => $this->data
+             ],
+             "links" => [
+                "report" => ""
+              ]
+            ];
+
+    } 
 }
+
