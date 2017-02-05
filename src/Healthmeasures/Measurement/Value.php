@@ -19,6 +19,8 @@ class Value extends Persistance
     public $value;
     
     public $created_at;
+    
+    protected $measure;
 
     
     public function __construct($owner_id = null, $measure_id = null, $created_at = null, $value = null)
@@ -29,6 +31,15 @@ class Value extends Persistance
         $this->value = $value;
         $this->created_at = !$created_at ? date("Y-m-d H:i:s") : $created_at;
         $this->setId();
+    }
+    
+    public function getMeasure()
+    {
+        if (!$this->measure) {
+            $this->measure = new Measure();
+            $this->measure->getById($this->measure_id);
+        }
+        return $this->measure;
     }
        
     /** Static getters to retrieve collections or one object **/
@@ -84,4 +95,21 @@ class Value extends Persistance
         return parent::save();
     }
 
+    public function toArray()
+    {
+        return 
+            ['type' => 'Value', 
+             'id' => $this->getId(), 
+             'attributes' => [
+                'measure_id' => $this->measure_id,
+                'owner_id' => $this->owner_id,
+                'value' => $this->value,
+                'created_at' => $this->created_at,
+             ],
+             'relationships' => [
+                 'measure' => $this->getMeasure()
+             ],
+            ];
+
+    }
 }

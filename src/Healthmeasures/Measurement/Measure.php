@@ -96,6 +96,7 @@ class Measure extends Persistance
             ['type' => 'Measure', 
              'id' => $this->getId(), 
              'attributes' => [
+                'name' => $this->name,
                 'unit' => $this->unit,
                 'lang' => $this->lang
              ]

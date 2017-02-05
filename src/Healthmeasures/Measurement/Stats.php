@@ -13,7 +13,11 @@ class Stats
     const GRAPH_LINEAR = "linear";
     const GRAPH_BARS = "bars";
     
-    /** Data receieved to make the graph **/
+    public $id;
+    /** 
+     * @type Value
+     * Data receieved to make the graph 
+     * **/
     public $data;
     /** created_at values **/
     public $xAxis;
@@ -43,6 +47,7 @@ class Stats
     public $graph_height = 534;
     /**Use this var if you want to store your graph as jpg instead of render it to the browser**/
     public $image_path;
+    public $url_image_path;
 
     public function __construct($data)
     {
@@ -52,21 +57,30 @@ class Stats
         $this->setSimpleStats();
     }
     
+    protected function setId(Array $ids)
+    {
+        $this->id = md5(implode(',', $ids));
+    }
+    
     protected function setAxis()
     {
         $datay = array();
         $datax = array();
         $createdAts = array();
+        $ids = array();
+        $id = null;
         
         foreach ($this->data as $val) {
             $datax[] = strtotime(explode(" ", $val->created_at)[0]); //only leave the date part
             $createdAts[] = $val->created_at;
             $datay[] = $val->value;
+            $ids[] = $val->id;
         }
         
         $this->xAxis = $datax;
         $this->createdAts = $createdAts;
         $this->yAxis = $datay;
+        $this->setId($ids);
     }
     
     protected function getMedian()
@@ -200,19 +214,25 @@ class Stats
             $values[] = str_replace(array('{{ key }}', '{{ value }}'), array($key, $val), $pattern2);
         }
 
+        $image = $this->url_image_path ? $this->url_image_path : $this->image_path; 
         $html = $app->config->get('htmlReport.html');
         $html = str_replace(
                 array('{{ report_title }}', '{{ css }}', '{{ today_date }}', '{{ graph_image }}', '{{ info_values }}', '{{ values }}',),
                 array($this->getTitle(), $app->config->get('htmlReport.css'), date($app->config->get('htmlReport.today_day_format')),
-                    $this->image_path, implode('', $info_values), implode('', $values)
+                    $image, implode('', $info_values), implode('', $values)
                 ), $html
         );
         return $html;
     }
     
+    public function getPreferredImagePath()
+    {
+        return $this->url_image_path ? $this->url_image_path : $this->image_path;
+    }
+    
     public function getId()
     {
-        return time();
+        return $this->id;
     }
     
     public function toArray()
@@ -233,7 +253,7 @@ class Stats
                 'color' => $this->color,
                 'graph_width' => $this->graph_width,
                 'graph_height' => $this->graph_height,
-                'image_path' => $this->image_path
+                'image_path' => $this->getPreferredImagePath()
              ],
              'relationships' => [
                  'measure' => $this->measure,
