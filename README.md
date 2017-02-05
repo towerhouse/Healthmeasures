@@ -16,16 +16,14 @@ Health Measures uses a number of open source projects to work properly:
 
 ### Installation
 
-- Nothing fancy, just run your composer to include this package.
+- composer require towerhouse/healthmeasures
 - Include the autoloader. 
-- If you want to run test-creation.php quickly put the whole project into your local server and run 
-test/quick.php it will show you what you want to see.
-- Declare the storage you want to use on config/database.php
-- If you're using this package inside a laravel or lumen project you don´t need the .env but you do need the previous step.
+- A file on the test's folder test-creation.php will give you a quick review of what the library does.
+- Rename .env.example to .env
 
 ### Example of use
 
-Select your storage method on the database config file
+Select your storage method on the .env file
 
 Enter your measures one by one or using the bulk method
 
@@ -112,4 +110,9 @@ https://github.com/towerhouse/Healthmeasures/tree/master/test/report.pdf
 
 ...and this is the image of the graph
 ![Alt text](https://raw.githubusercontent.com/towerhouse/Healthmeasures/master/test/linear_bar.jpg?raw=true)
+
+### Unit testing
+
+There is an article about unit testing I wrote for this library documented here:
+http://towerhousestudio.com/easy-unit-testing-for-composer-package
 
