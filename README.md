@@ -19,7 +19,8 @@ Health Measures uses a number of open source projects to work properly:
 - composer require towerhouse/healthmeasures
 - Include the autoloader. 
 - A file on the test's folder test-creation.php will give you a quick review of what the library does.
-- Rename .env.example to .env
+- Merge the values from .env.example you want to use in your env or just rename the example to .env.
+- This package should work standalone.
 
 ### Example of use
 
