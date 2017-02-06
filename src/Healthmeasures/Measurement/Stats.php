@@ -249,7 +249,7 @@ class Stats
                 'avg_value' => $this->avg_value,
                 'median_value' => $this->median_value,
                 'mode_value' => $this->mode_value,
-                'title' => $this->title,
+                'title' => $this->getTitle(),
                 'legend' => $this->legend,
                 'color' => $this->color,
                 'graph_width' => $this->graph_width,
