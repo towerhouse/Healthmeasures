@@ -12,24 +12,10 @@ return array(
 	|
 	*/
     
-        'table_names' => array(
-            'Measure' => 'measures',
-            'Value' => 'values',
-        ),
+        'table_name_measure' => getenv('TABLE_MEASURES'),
+        'table_name_value' => getenv('TABLE_VALUES'),
     
-        'tables_prefix'   => 'healthmeasures_',
-
-	/*
-	|--------------------------------------------------------------------------
-	| PDO Fetch Style
-	|--------------------------------------------------------------------------
-	|
-	| By default, database results will be returned as instances of the PHP
-	| arrays.
-	|
-	*/
-
-	'fetch' => PDO::FETCH_ASSOC,
+        'tables_prefix'   => getenv('TABLES_PREFIX'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -60,17 +46,16 @@ return array(
 
 		'sqlite' => array(
 			'driver'   => 'sqlite',
-			'database' =>  'mbhealth',	
+			'database' =>  getenv('DB_DATABASE'),	
 		),
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-                        'database'  => 'mbhealth',
-                        'username'  => 'root',
-                        'password'  => '',
-			'charset'   => 'utf8',
-			'collation' => 'utf8_unicode_ci',
+			'host'      => getenv('DB_HOST'),
+                        'database'  => getenv('DB_DATABASE'),
+                        'username'  => getenv('DB_USERNAME'),
+                        'password'  => getenv('DB_PASSWORD'),
+			'charset'   => getenv('DB_CHARSET'),
 		)
 
 	),

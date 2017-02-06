@@ -173,7 +173,6 @@ abstract class Persistance
      */
     public function getTableName($classname)
     {
-        $table_names = static::$app->config->get('database.table_names'); 
         $prefix = static::$app->config->get('database.tables_prefix'); 
         $class = $classname;
 
@@ -182,7 +181,8 @@ abstract class Persistance
             $class = $parts[count($parts) - 1];
         }
         
-        $table = $prefix . $table_names[$class];
+        $table = $prefix . strtolower($class);
+
         return $table;
     }
     
@@ -247,7 +247,7 @@ abstract class Persistance
                 $data = static::$app->config->get('database.connections.mysql');
                 $dbh = new \PDO("mysql:host={$data['host']};dbname={$data['database']};charset={$data['charset']}", $data['username'], $data['password']);
             } else {
-                $data = static::$app->config->get('database.connections.mysql');
+                $data = static::$app->config->get('database.connections.sqlite');
                 $dbh = new \PDO('sqlite:' . $data['database']);    
             }
             static::$connection = $dbh;

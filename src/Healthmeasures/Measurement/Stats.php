@@ -214,7 +214,7 @@ class Stats
             $values[] = str_replace(array('{{ key }}', '{{ value }}'), array($key, $val), $pattern2);
         }
 
-        $image = $this->url_image_path ? $this->url_image_path : $this->image_path; 
+        $image = $this->getPreferredImagePath(); 
         $html = $app->config->get('htmlReport.html');
         $html = str_replace(
                 array('{{ report_title }}', '{{ css }}', '{{ today_date }}', '{{ graph_image }}', '{{ info_values }}', '{{ values }}',),
