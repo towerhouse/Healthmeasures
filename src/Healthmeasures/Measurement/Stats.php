@@ -122,7 +122,8 @@ class Stats
     
     public function getTitle()
     {
-        return $this->title ? $this->title : $this->getDefaultTitle();
+        $t = $this->title ? $this->title : $this->getDefaultTitle();
+        return str_replace('%20', '', $t);
     }
  
     /**
