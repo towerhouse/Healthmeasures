@@ -125,6 +125,17 @@ class StatsTest extends \PHPUnit_Framework_TestCase
         unlink($stats->image_path);
     }
     
+    public function graphTitleDefaultsToReportTitle()
+    {
+        $stats = $this->getDefaultStats();
+        $stats->setTitle("Name number 1");
+        $stats->generateDateMeasureGraph();
+        $this->assertEquals($stats->getGraphTitle(), $stats->getTitle());
+        $stats->setTitle("Name number 2");
+        $stats->generateDateMeasureGraph();
+        $this->assertEquals($stats->getGraphTitle(), $stats->getTitle());
+    }
+    
     protected function countCsvFileLines($csv)
     {
         $c =0;

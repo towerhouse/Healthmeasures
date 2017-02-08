@@ -190,7 +190,15 @@ class Stats
         }
         
         $path = $this->image_path ? $this->image_path : '';
+        $this->graph = $graph;
         $graph->Stroke($path);
+    }
+    
+    public function getGraphTitle()
+    {
+        if ($this->graph) {
+            return $this->graph->title;
+        }
     }
     
     /**
