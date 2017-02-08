@@ -55,11 +55,36 @@ class Stats
         $this->setAxis();
         $this->setMeasure();
         $this->setSimpleStats();
+        $this->setTitle();
+    }
+    
+    public function setTitle($title = null)
+    {
+        $t = $title ? $title : $this->getDefaultTitle();
+        $this->title = rawurldecode($t);
+        if ($this->id) {
+            $this->resetId();
+        }
+    }
+ 
+    public function getDefaultTitle()
+    {
+        return $this->measure ? $this->measure->name . " ({$this->measure->unit})" : "";
+    }
+    
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    
+    public function resetId()
+    {
+        $this->id = md5($this->id . $this->getTitle());
     }
     
     protected function setId(Array $ids)
     {
-        $this->id = md5(implode(',', $ids));
+        $this->id = md5(implode(',', $ids) . $this->getTitle());
     }
     
     protected function setAxis()
@@ -112,18 +137,6 @@ class Stats
         if (!$this->measure) {
             throw new \Exception("Measure with id `{$val->measure_id}` not found, this stats report will be unstable");
         }
-    }
-
-
-    public function getDefaultTitle()
-    {
-        return $this->measure ? $this->measure->name . " ({$this->measure->unit})" : "";
-    }
-    
-    public function getTitle()
-    {
-        $t = $this->title ? $this->title : $this->getDefaultTitle();
-        return str_replace('%20', '', $t);
     }
  
     /**
@@ -249,7 +262,7 @@ class Stats
                 'avg_value' => $this->avg_value,
                 'median_value' => $this->median_value,
                 'mode_value' => $this->mode_value,
-                'title' => $this->getTitle(),
+                'title' => $this->title,
                 'legend' => $this->legend,
                 'color' => $this->color,
                 'graph_width' => $this->graph_width,
