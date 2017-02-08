@@ -115,5 +115,5 @@ https://github.com/towerhouse/Healthmeasures/tree/master/test/report.pdf
 ### Unit testing
 
 There is an article about unit testing I wrote for this library documented here:
-http://towerhousestudio.com/easy-unit-testing-for-composer-package
+https://www.linkedin.com/pulse/unit-testing-activity-annoys-programmers-lucia-figueroa-tasca
 
