@@ -110,10 +110,10 @@ This is a pdf I took from the html page.
 https://github.com/towerhouse/Healthmeasures/tree/master/test/report.pdf
 
 ...and this is the image of the graph
-![Alt text](https://raw.githubusercontent.com/towerhouse/Healthmeasures/master/test/linear_bar.jpg?raw=true)
+![Alt text](https://github.com/towerhouse/Healthmeasures/blob/master/test/sample-linear-graph.jpg?raw=true)
 
 ### Unit testing
 
 There is an article about unit testing I wrote for this library documented here:
-http://towerhousestudio.com/easy-unit-testing-for-composer-package
+https://www.linkedin.com/pulse/unit-testing-activity-annoys-programmers-lucia-figueroa-tasca
 
