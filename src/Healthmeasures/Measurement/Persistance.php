@@ -146,7 +146,14 @@ abstract class Persistance
     public function getById($id)
     {
         $all = $this->getObjectsByCriteria(array('id' => $id));
-        return count($all) >= 1 ? $all[0] : null;
+        if (count($all) >= 1) {
+            //Hydratation of this object
+            $o = $all[0];
+            foreach ($o as $key => $val) {
+                $this->$key = $val;
+            }
+            return $o;
+        }
     }
     
     public function getAll()

@@ -39,6 +39,17 @@ class MeasureTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0, $m->countAll());
         $this->assertEquals($m->getId(), $w->getId(), "The waist measure was stored on the database with id " . $m->getId());
     }
+	
+	public function oneObjectHydratesItselfById()
+	{
+		$m = new Measure("wrist", "inches", "en");
+		$w = $m->save();
+		$id = $w->id;
+		
+		$m2 = new Measure();
+		$m2->getById();
+        $this->assertEquals($m2->getId(), $w->getId());
+	}
     
     public function testBulkConstructor()
     {
